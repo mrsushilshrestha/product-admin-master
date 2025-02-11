@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404, redirect
 from django.http.response import HttpResponse
 
 from django.contrib.auth import login as auth_login ,logout as auth_logout
@@ -7,19 +7,56 @@ from django.contrib.auth. hashers import make_password,check_password
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 
-# Create your views here.
-# def login(request):
-    
-#     return render(request,'login.html')
+from .models import Product
+from django.shortcuts import render, redirect
+
+
+def delete_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    product.delete()
+    return redirect('product')  # Redirect to the product list page
+
+
+# def delete_category(request, category_id):
+#     category = get_object_or_404(Category, id=category_id)
+#     category.delete()
+#     return redirect('your-category-view-url')  # Redirect to the category list page
 
 @login_required(login_url='/login')
-def products(request):    
-    return render(request,'products.html',{'active_page': 'products'})
+def products(request):
+    products = Product.objects.all()    
+    return render(request,'products.html',{'products': products})
 
 @login_required(login_url='/login/')
 def add_products(request):
-    
-    return render(request,'add-product.html')
+    from django.shortcuts import render, redirect
+from .models import Product  # Import Product model
+from django.utils.crypto import get_random_string  # To generate unique IDs
+
+def add_products(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        category = request.POST.get('category')
+        expire_date = request.POST.get('expire_date')
+        stock = request.POST.get('stock')
+        image = request.FILES.get('image')  # Handling file upload
+
+        # Save product to the database
+        Product.objects.create(
+            name=name,
+            description=description,
+            category=category,
+            expire_date=expire_date,
+            stock=stock,
+            image=image
+        )
+
+        return redirect('products')  # Redirect after successful submission
+
+    return render(request, "add-product.html")
+
+
 
 @login_required(login_url='/login')
 def edit_products(request):
