@@ -38,7 +38,7 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mx-auto h-100">
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'index' %}">
+                <a class="nav-link active" href="{% url 'index' %}">
                   <i class="fas fa-tachometer-alt"></i> Dashboard
                   <span class="sr-only">(current)</span>
                 </a>
@@ -131,7 +131,6 @@
       </div>
     </footer>
 
-    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  {% block script %} {% endblock %}
   </body>
 </html>
