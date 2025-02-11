@@ -10,29 +10,21 @@ from django.contrib.auth.decorators import login_required
 from .models import Product,Category
 from django.shortcuts import render, redirect
 
-
+#delete product
 def delete_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     product.delete()
     return redirect('products')  # Redirect to the product list page
 
-
-# def delete_category(request, category_id):
-#     category = get_object_or_404(Category, id=category_id)
-#     category.delete()
-#     return redirect('your-category-view-url')  # Redirect to the category list page
-
-@login_required(login_url='/login')
+#product
+@login_required(login_url='/login') #make loging required
 def products(request):
     products = Product.objects.all()    
-    return render(request,'products.html',{'products': products})
+    return render(request, 'products.html', {'products': products, 'active_page': 'products'})
 
+
+#add new Product
 @login_required(login_url='/login/')
-def add_products(request):
-    from django.shortcuts import render, redirect
-from .models import Product  # Import Product model
-from django.utils.crypto import get_random_string  # To generate unique IDs
-
 def add_products(request):
     categories = Category.objects.all()  # Get all categories from the database
 
@@ -61,6 +53,8 @@ def add_products(request):
 
     return render(request, "add-product.html", {'categories': categories})
 
+
+#add category
 def add_category(request):
     if request.method == "POST":
         category_name = request.POST.get('category_name')
@@ -72,12 +66,13 @@ def add_category(request):
     return render(request, "add-category.html")
 
 
-
+#edit product
 @login_required(login_url='/login')
 def edit_products(request):
     
     return render(request,'edit-product.html')
 
+#index page
 @login_required(login_url='/login')
 def index(request):
     
@@ -88,16 +83,14 @@ def custom_logout(request):
     auth_logout(request)
     return redirect('login')  # Redirect to login page after logout
 
-def customer_account(request):
-    
+def customer_account(request):    
     return HttpResponse("This is Account Pages",{'active_page': 'account'})
 
-def customer_setting(request):
-    
+def customer_setting(request):    
     return HttpResponse('hello from setting',{'active_page': 'setting'})
 
 
-# Create your views here.
+#signup user
 def signup(request):
     if request.method == "POST":
         username = request.POST.get('username')
@@ -109,7 +102,6 @@ def signup(request):
         
         User.objects.create(username=username,password=password,first_name=first_name,last_name=last_name,email=email)
         
-
     return render(request,"signup-user.html")
 
 # def login(request):
