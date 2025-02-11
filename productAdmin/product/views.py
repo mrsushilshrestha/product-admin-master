@@ -7,14 +7,14 @@ from django.contrib.auth. hashers import make_password,check_password
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 
-from .models import Product
+from .models import Product,Category
 from django.shortcuts import render, redirect
 
 
 def delete_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     product.delete()
-    return redirect('product')  # Redirect to the product list page
+    return redirect('products')  # Redirect to the product list page
 
 
 # def delete_category(request, category_id):
@@ -34,19 +34,24 @@ from .models import Product  # Import Product model
 from django.utils.crypto import get_random_string  # To generate unique IDs
 
 def add_products(request):
+    categories = Category.objects.all()  # Get all categories from the database
+
     if request.method == "POST":
         name = request.POST.get('name')
         description = request.POST.get('description')
-        category = request.POST.get('category')
+        category_id = request.POST.get('category')  # Get selected category ID
         expire_date = request.POST.get('expire_date')
         stock = request.POST.get('stock')
-        image = request.FILES.get('image')  # Handling file upload
+        image = request.FILES.get('image')  # Handle file upload
 
-        # Save product to the database
+        # Fetch the category object using the ID
+        category = get_object_or_404(Category, id=category_id)
+
+        # Save the product to the database
         Product.objects.create(
             name=name,
             description=description,
-            category=category,
+            category=category,  # Link to the category object
             expire_date=expire_date,
             stock=stock,
             image=image
@@ -54,7 +59,17 @@ def add_products(request):
 
         return redirect('products')  # Redirect after successful submission
 
-    return render(request, "add-product.html")
+    return render(request, "add-product.html", {'categories': categories})
+
+def add_category(request):
+    if request.method == "POST":
+        category_name = request.POST.get('category_name')
+
+        # Save the new category to the database
+        Category.objects.create(name=category_name)
+        
+        return redirect('products')  # Redirect after category creation
+    return render(request, "add-category.html")
 
 
 

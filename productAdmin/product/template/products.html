@@ -61,7 +61,7 @@
                       <tr>
                           <td class="tm-product-name">{{ product.category }}</td>  <!-- Assuming 'name' is the field in your model -->
                           <td class="text-center">
-                              <a href="#" class="tm-product-delete-link">
+                              <a href="{% url 'add_category' %}" class="tm-product-delete-link">
                                   <i class="far fa-trash-alt tm-product-delete-icon"></i>
                               </a>
                           </td>
@@ -71,9 +71,9 @@
               </table>
           </div>
           <!-- table container -->
-          <button class="btn btn-primary btn-block text-uppercase mb-3">
-              Add new category
-          </button>
+          <a href="{% url 'add_category' %}" class="btn btn-primary btn-block text-uppercase mb-3">
+            Add new category
+          </a>
       </div>
   </div>
   

@@ -4,7 +4,6 @@
 
 <!-- add-product block -->
 {% block add-product %}
-
     <div class="container tm-mt-big tm-mb-big">
       <div class="row">
         <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
@@ -31,10 +30,9 @@
                   <div class="form-group mb-3">
                     <label for="category">Category</label>
                     <select name="category" class="custom-select tm-select-accounts" id="category" required>
-                      <option value="" selected disabled>Select category</option>
-                      <option value="New Arrival">New Arrival</option>
-                      <option value="Most Popular">Most Popular</option>
-                      <option value="Trending">Trending</option>
+                      {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                      {% endfor %}
                     </select>
                   </div>
 
@@ -70,7 +68,6 @@
         </div>
       </div>
     </div>
-
 {% endblock %}
 
 {% block script %}
