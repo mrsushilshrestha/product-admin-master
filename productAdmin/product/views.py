@@ -1,36 +1,48 @@
 from django.shortcuts import render
 from django.http.response import HttpResponse
 
-from django.contrib.auth import login,logout
+from django.contrib.auth import login as auth_login ,logout as auth_logout
 from django.contrib.auth.models import User
 from django.contrib.auth. hashers import make_password,check_password
 from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 # def login(request):
     
 #     return render(request,'login.html')
 
-def products(request):
-    
-    return render(request,'products.html')
+@login_required(login_url='/login')
+def products(request):    
+    return render(request,'products.html',{'active_page': 'products'})
 
+@login_required(login_url='/login/')
 def add_products(request):
     
     return render(request,'add-product.html')
 
+@login_required(login_url='/login')
 def edit_products(request):
     
     return render(request,'edit-product.html')
 
+@login_required(login_url='/login')
 def index(request):
     
-    return render(request,'index.html')
+    return render(request,'index.html',{'active_page': 'dashboard'})
 
 #logout the user
 def custom_logout(request):
-    logout(request)
+    auth_logout(request)
     return redirect('login')  # Redirect to login page after logout
+
+def customer_account(request):
+    
+    return HttpResponse("This is Account Pages",{'active_page': 'account'})
+
+def customer_setting(request):
+    
+    return HttpResponse('hello from setting',{'active_page': 'setting'})
 
 
 # Create your views here.
@@ -70,8 +82,10 @@ def signup(request):
 
 def login_user(request):
     if request.method == "POST":
+        payload =request.POST
         username = request.POST.get('username')
         password = request.POST.get('password')
+        next= payload.get('next')
 
         print("Username:", username, "Password:", password)
 
@@ -86,9 +100,11 @@ def login_user(request):
         print(password)
         print(user_obj.password)
         if check_password_data:
-            login(request,user_obj)
-            return HttpResponse("Congratulations! You are logged in.")
+            auth_login(request,user_obj)
+            if next:
+                return redirect(next)
+            return redirect('index')  
         else:
             return HttpResponse("Invalid username or password")
-
-    return render(request,"login.html")
+        
+    return render(request,"login.html",{'next':request.GET.get('next')})
