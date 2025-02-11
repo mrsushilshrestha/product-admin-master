@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.http.response import HttpResponse
 
-from django.contrib.auth import login
+from django.contrib.auth import login,logout
 from django.contrib.auth.models import User
 from django.contrib.auth. hashers import make_password,check_password
+from django.shortcuts import redirect
 
 # Create your views here.
 # def login(request):
@@ -25,6 +26,11 @@ def edit_products(request):
 def index(request):
     
     return render(request,'index.html')
+
+#logout the user
+def custom_logout(request):
+    logout(request)
+    return redirect('login')  # Redirect to login page after logout
 
 
 # Create your views here.
