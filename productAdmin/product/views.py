@@ -68,9 +68,10 @@ def add_category(request):
 
 #edit product
 @login_required(login_url='/login')
-def edit_products(request):
+def edit_products(request):  # Accept product_id as a parameter
     
-    return render(request,'edit-product.html')
+    return render(request, 'edit-product.html')
+
 
 #index page
 @login_required(login_url='/login')
@@ -83,11 +84,16 @@ def custom_logout(request):
     auth_logout(request)
     return redirect('login')  # Redirect to login page after logout
 
-def customer_account(request):    
-    return HttpResponse("This is Account Pages",{'active_page': 'account'})
 
+#account
+@login_required(login_url='/login')
+def customer_account(request):    
+    return render(request,'account.html',{'active_page': 'account'})
+
+#setting
+@login_required(login_url='/login')
 def customer_setting(request):    
-    return HttpResponse('hello from setting',{'active_page': 'setting'})
+    return render(request,'edit-product.html',{'active_page': 'setting'})
 
 
 #signup user
@@ -152,3 +158,5 @@ def login_user(request):
             return HttpResponse("Invalid username or password")
         
     return render(request,"login.html",{'next':request.GET.get('next')})
+
+
