@@ -88,13 +88,34 @@ def custom_logout(request):
 #account
 @login_required(login_url='/login')
 def customer_account(request):    
-    return render(request,'account.html',{'active_page': 'account'})
+    return render(request,'accounts.html',{'active_page': 'account'})
 
 #setting
 @login_required(login_url='/login')
 def customer_setting(request):    
     return render(request,'edit-product.html',{'active_page': 'setting'})
 
+
+@login_required
+def update_profile(request):
+    profile = request.user.profile
+
+    if request.method == 'POST':
+        # Handle avatar and phone update
+        if 'avatar' in request.FILES:
+            profile.avatar = request.FILES['avatar']
+        profile.phone = request.POST.get('phone')
+        profile.save()
+
+        # Update user info (username, email)
+        request.user.username = request.POST.get('name')
+        request.user.email = request.POST.get('email')
+        request.user.set_password(request.POST.get('password'))  # Optional: Password change
+        request.user.save()
+
+        return redirect('profile')  # Redirect to the profile page after updating
+
+    return render(request, 'update_profile.html', {'user': request.user})
 
 #signup user
 def signup(request):
