@@ -16,13 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-<<<<<<< HEAD
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
-=======
-from django.conf import settings
-from django.conf.urls.static import static
->>>>>>> fd80f66bc3a6993191e1fdfa55994465fa96aee3
 
 
 # Serializers define the API representation.
@@ -94,11 +89,3 @@ urlpatterns = [
     
     
 ]
-<<<<<<< HEAD
-
-
-
-=======
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
->>>>>>> fd80f66bc3a6993191e1fdfa55994465fa96aee3
