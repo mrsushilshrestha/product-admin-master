@@ -38,15 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'product',
-<<<<<<< HEAD
-    'votingSystem',
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_yasg',
     'django_filters',
     
-=======
->>>>>>> fd80f66bc3a6993191e1fdfa55994465fa96aee3
 ]
 
 MIDDLEWARE = [

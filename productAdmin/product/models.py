@@ -2,13 +2,14 @@ from django.contrib.auth.models import User
 from django.db import models
 import django_filters
 
-
+#model for category
 class Category(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
+#model for Product
 class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(default="update product")
@@ -21,6 +22,11 @@ class Product(models.Model):
         return self.name
 
 
+#For Profile
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    phone = models.CharField(max_length=15, blank=True, null=True)
+    avatar = models.ImageField(upload_to='avatars/', default='avatars/default.png')
 
-
-
+    def __str__(self):
+        return self.user.username
