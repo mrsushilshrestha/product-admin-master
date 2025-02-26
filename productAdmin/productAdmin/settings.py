@@ -150,4 +150,3 @@ REST_FRAMEWORK = {
     )
     
 }
-
