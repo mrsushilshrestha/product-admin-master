@@ -45,9 +45,15 @@
         <a href="{% url 'add_products' %}" class="btn btn-primary btn-block text-uppercase mb-3">
           Add new product
         </a>
-        <a href="{% url 'edit_products' %}" class="btn btn-primary btn-block text-uppercase mb-3">
-          Edit product
-        </a>
+        {% for product in products %}
+        <tr>
+            <!-- <td>{{ product.id }}</td> <Debugging: Check that the product id exists-->
+            <!-- <td>{{ product.name }}</td> -->
+            <td><a href="{% url 'edit_products' product.id %}" class="btn btn-primary btn-block text-uppercase mb-3">Edit product</a></td>
+        </tr>
+        {% endfor %}
+    
+      
         <button class="btn btn-primary btn-block text-uppercase">
           Delete selected products
         </button>
@@ -62,7 +68,7 @@
                   <tbody>
                       {% for product in products %}
                       <tr>
-                          <td class="tm-product-name">{{ product.category }}</td>  <!-- Assuming 'name' is the field in your model -->
+                          <td class="tm-product-name">{{ product.category.name }}</td>  <!-- Access category name -->
                           <td class="text-center">
                               <a href="{% url 'add_category' %}" class="tm-product-delete-link">
                                   <i class="far fa-trash-alt tm-product-delete-icon"></i>
@@ -78,8 +84,7 @@
             Add new category
           </a>
       </div>
-  </div>
-  
+    </div>
   </div>
 </div>
 {% endblock %}

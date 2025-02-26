@@ -25,8 +25,12 @@ urlpatterns = [
     path('customer_setting/', customer_setting, name="customer_setting"),
     
     path('delete-product/<int:product_id>/', delete_product, name='delete_product'),
+<<<<<<< HEAD
     path('edit-products/', edit_products, name='edit_products'),
     path('api/',include(router.urls))
+=======
+    path('edit-products/<int:product_id>/', edit_products, name='edit_products'),
+>>>>>>> fd80f66bc3a6993191e1fdfa55994465fa96aee3
 ]
 
     

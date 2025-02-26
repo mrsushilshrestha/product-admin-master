@@ -26,32 +26,30 @@ def products(request):
 #add new Product
 @login_required(login_url='/login/')
 def add_products(request):
-    categories = Category.objects.all()  # Get all categories from the database
-
     if request.method == "POST":
         name = request.POST.get('name')
         description = request.POST.get('description')
-        category_id = request.POST.get('category')  # Get selected category ID
+        category_id = request.POST.get('category')
         expire_date = request.POST.get('expire_date')
         stock = request.POST.get('stock')
-        image = request.FILES.get('image')  # Handle file upload
+        image = request.FILES.get('image')  
 
-        # Fetch the category object using the ID
-        category = get_object_or_404(Category, id=category_id)
+        category = Category.objects.get(id=category_id)  # Get category object
 
-        # Save the product to the database
-        Product.objects.create(
+        product = Product(
             name=name,
             description=description,
-            category=category,  # Link to the category object
+            category=category,
             expire_date=expire_date,
             stock=stock,
-            image=image
+            image=image  
         )
+        product.save()
 
-        return redirect('products')  # Redirect after successful submission
+        return redirect('products')  # Redirect to products page
 
-    return render(request, "add-product.html", {'categories': categories})
+    categories = Category.objects.all()
+    return render(request, "add-product.html", {"categories": categories})
 
 
 #add category
@@ -68,10 +66,24 @@ def add_category(request):
 
 #edit product
 @login_required(login_url='/login')
-def edit_products(request):  # Accept product_id as a parameter
-    
-    return render(request, 'edit-product.html')
+def edit_products(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
 
+    if request.method == 'POST':
+        # Handle form submission and update product
+        product.name = request.POST['name']
+        product.description = request.POST['description']
+        product.category_id = request.POST['category']
+        product.expire_date = request.POST['expire_date']
+        product.stock = request.POST['stock']
+
+        if 'image' in request.FILES:
+            product.image = request.FILES['image']
+
+        product.save()
+        return redirect('products')  # Redirect to products list or success page
+
+    return render(request, 'edit-product.html', {'product': product})
 
 #index page
 @login_required(login_url='/login')
@@ -88,13 +100,34 @@ def custom_logout(request):
 #account
 @login_required(login_url='/login')
 def customer_account(request):    
-    return render(request,'account.html',{'active_page': 'account'})
+    return render(request,'accounts.html',{'active_page': 'account'})
 
 #setting
 @login_required(login_url='/login')
 def customer_setting(request):    
     return render(request,'edit-product.html',{'active_page': 'setting'})
 
+
+@login_required
+def update_profile(request):
+    profile = request.user.profile
+
+    if request.method == 'POST':
+        # Handle avatar and phone update
+        if 'avatar' in request.FILES:
+            profile.avatar = request.FILES['avatar']
+        profile.phone = request.POST.get('phone')
+        profile.save()
+
+        # Update user info (username, email)
+        request.user.username = request.POST.get('name')
+        request.user.email = request.POST.get('email')
+        request.user.set_password(request.POST.get('password'))  # Optional: Password change
+        request.user.save()
+
+        return redirect('profile')  # Redirect to the profile page after updating
+
+    return render(request, 'update_profile.html', {'user': request.user})
 
 #signup user
 def signup(request):
